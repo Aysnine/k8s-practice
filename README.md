@@ -2,6 +2,8 @@
 
 *Don't use any proxy!!!*
 
+- [kubernetes 从入门到实践](https://www.kancloud.cn/huyipow/kubernetes/531982)
+
 ## 虚拟环境搭建
 
 - [Vagrant 搭建虚拟机集群](http://flygopher.top/post/vagrant-setup-virtual-machine-cluster/?nsukey=f2tCN3URnXJHcQ%2Famyuh4XhEC%2BcrAwnzUoonKqzhuelzA8I1hT%2ByLvMzczvscnAeegg4XXJ6sZABYJX85QKOncWePbwP1mBm0JVLMEoNtyjjS92BvGj7gLRpDb28YCc79fxL65CRbGYXBD6A2tfpEDFyN9C9g8FCD29BBqT7uR8mj5OqtVJrYfytByedOQ2ImW%2BXbjAAYwpX9XHX6NydHg%3D%3D)
@@ -44,10 +46,48 @@ vagrant ssh default
 vagrant up
 ```
 
-映射 dashboard：
+### Dashboard
+
+- [通用的dashboard部署和tls，SSL相关部署](https://zhangguanzhang.github.io/2019/02/12/dashboard/)
+
+#### port-forward
+
+*193.168.100.101:4443*
+
 ``` bash
 vagrant ssh node1
-kdashf # port-forward k8s dashboard
+kdashf # sudo kubectl port-forward -n kubernetes-dashboard svc/kubernetes-dashboard 4443:443 --address 0.0.0.0
+```
+
+#### NodePort
+
+*193.168.100.101:32443*
+
+- [How To Install Kubernetes Dashboard with NodePort](https://computingforgeeks.com/how-to-install-kubernetes-dashboard-with-nodeport/)
+
+``` yaml
+# vim /vagrant/dashboard/recommended.yaml
+
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: kubernetes-dashboard
+  name: kubernetes-dashboard
+  namespace: kubernetes-dashboard
+spec:
+  ports:
+    - port: 443
+      targetPort: 8443
+      nodePort: 32443 # here
+  selector:
+    k8s-app: kubernetes-dashboard
+  type: NodePort # here
+```
+
+``` bash
+# apply
+kubectl apply -f /vagrant/dashboard/recommended.yaml
 ```
 
 ## Gitlab 搭建
@@ -55,4 +95,3 @@ kdashf # port-forward k8s dashboard
 - [kubernetes（k8s）Gitlab 的安装使用](https://www.jianshu.com/p/cd4aba71d19d)
 
 TODO
-

@@ -40,9 +40,10 @@ spec:
   ports:
     - port: 443
       targetPort: 8443
+      # nodePort: 32443
   selector:
     k8s-app: kubernetes-dashboard
-
+  # type: NodePort
 ---
 
 apiVersion: v1
