@@ -23,7 +23,6 @@ cd my-centos7
 
 vagrant destroy -f && vagrant up
 
-vagrant halt
 mkdir -p ~/vagrant/
 rm -f ~/vagrant/MyCentos7.box
 vagrant box remove MyCentos7
